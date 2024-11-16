@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* Додатковий імпорт стилів бібліотеки iziToast */
+@import url('izitoast/dist/css/iziToast.min.css');
+
+/* ========================================================================================================================== */
+
+body {
+	font-family: "Montserrat", sans-serif;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 1.5;
+	letter-spacing: 0.04em;
+	color: #2e2f42;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	border: 0;
+	padding: 0;
+	white-space: nowrap;
+	clip-path: inset(100%);
+	clip: rect(0 0 0 0);
+	overflow: hidden;
+}
+
+/* ========================================================================================================================== */
+
+.iziToast {
+	font-family: "Montserrat", sans-serif;
+	letter-spacing: 0.03em;
+	border-radius: 4px;
+	box-shadow: none;
+	overflow: hidden;
+}
+
+.iziToast:after {
+	display: none;
+}
+
+.iziToast>.iziToast-close {
+	background-image: url("../img/close.svg");
+	background-size: 16px;
+	opacity: .8;
+	transition: opacity 0.3s ease 0s;
+}
