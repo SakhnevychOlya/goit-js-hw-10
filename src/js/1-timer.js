@@ -1,112 +1,114 @@
-import flatpickr from "flatpickr";
+import flatpickr from "flatpickr"; 
 import iziToast from "izitoast";
 
 let userSelectedDate;
 const datetimeBtn = document.querySelector('.datetime-btn');
 
 const flatpickrOptions = {
-	enableTime: true,
-	time_24hr: true,
-	defaultDate: new Date(),
-	minuteIncrement: 1,
-	onClose(selectedDates) {
-		userSelectedDate = selectedDates[0];
-		const currentDate = checkDate(); // get current date from function checkDate() at the moment of choosing the date
-		if (checkDate) {
-			datetimeBtn.addEventListener("click", () => startTimer(currentDate));
-		}
-	},
+    enableTime: true,
+    time_24hr: true,
+    defaultDate: new Date(),
+    minuteIncrement: 1,
+    onClose(selectedDates) {
+        userSelectedDate = selectedDates[0];
+        const currentDate = checkDate(); 
+        if (currentDate) {  
+            startTimer(currentDate); 
+        }
+    },
 };
 
 const iziToastOptions = {
-	title: "Error",
-	titleColor: '#fff',
-	titleSize: "16px",
-	titleLineHeight: "1.5",
-	message: "Illegal operation",
-	backgroundColor: "#ef4040",
-	color: "white",
-	messageColor: "#fff",
-	messageSize: "16px",
-	messageLineHeight: "1.5",
-	iconUrl: new URL('../img/error.svg', import.meta.url).href,
-	iconColor: "#fff",
-	close: true,
-	closeOnEscape: true,
-	progressBarColor: "#b51b1b",
-	position: "topRight",
-	timeout: 5000,
-	animateInside: false,
-	transitionIn: "bounceInLeft"
+    title: "Error",
+    titleColor: '#fff',
+    titleSize: "16px",
+    titleLineHeight: "1.5",
+    message: "Illegal operation",
+    backgroundColor: "#ef4040",
+    color: "white",
+    messageColor: "#fff",
+    messageSize: "16px",
+    messageLineHeight: "1.5",
+    iconUrl: new URL('../img/error.svg', import.meta.url).href,
+    iconColor: "#fff",
+    close: true,
+    closeOnEscape: true,
+    progressBarColor: "#b51b1b",
+    position: "topRight",
+    timeout: 5000,
+    animateInside: false,
+    transitionIn: "bounceInLeft"
 };
 
 flatpickr("#datetime-picker", flatpickrOptions);
 
 function checkDate() {
-	const currentDate = new Date();
-	if (userSelectedDate <= currentDate) {
-		datetimeBtn.setAttribute("disabled", "disabled");
-		iziToast.show(iziToastOptions);
-		return false;
-	} else {
-		datetimeBtn.removeAttribute("disabled");
-		return currentDate;
-	}
+    const currentDate = new Date();
+    if (userSelectedDate <= currentDate) {
+        datetimeBtn.setAttribute("disabled", "disabled");
+        iziToast.show(iziToastOptions);
+        return false; 
+    } else {
+        datetimeBtn.removeAttribute("disabled");
+        return currentDate; 
+    }
 }
 
 function startTimer(currentDate) {
-	const timeTimer = userSelectedDate - currentDate;
+    const timeTimer = userSelectedDate - currentDate;
 
-	const secondsEl = document.querySelector("[data-seconds]");
-	const minutesEl = document.querySelector("[data-minutes]");
-	const hoursEl = document.querySelector("[data-hours]");
-	const daysEl = document.querySelector("[data-days]");
+    const secondsEl = document.querySelector("[data-seconds]");
+    const minutesEl = document.querySelector("[data-minutes]");
+    const hoursEl = document.querySelector("[data-hours]");
+    const daysEl = document.querySelector("[data-days]");
 
-	let timeLeft = timeTimer;
-	setDate();
-	const datetimeInput = document.querySelector('.datetime-input');
-	datetimeInput.setAttribute("disabled", "disabled");
-	datetimeBtn.setAttribute("disabled", "disabled");
+    let timeLeft = timeTimer;
 
-	const timer = setInterval(() => {
-		timeLeft -= 1000;
-		if (timeLeft <= 0) {
-			clearInterval(timer);
-			secondsEl.textContent = "00";
-			minutesEl.textContent = "00";
-			hoursEl.textContent = "00";
-			daysEl.textContent = "00";
-			datetimeInput.removeAttribute("disabled");
-		} else {
-			setDate();
-		}
-	}, 1000);
+    setDate();
+    const datetimeInput = document.querySelector('.datetime-input');
+    datetimeInput.setAttribute("disabled", "disabled");
+    datetimeBtn.setAttribute("disabled", "disabled");
 
-	function setDate() {
-		const timeTimerObject = convertMs(timeLeft);
-		const { days, hours, minutes, seconds } = timeTimerObject;
-		secondsEl.textContent = seconds;
-		minutesEl.textContent = minutes;
-		hoursEl.textContent = hours;
-		daysEl.textContent = days;
-	}
+    const timer = setInterval(() => {
+        timeLeft -= 1000;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer); 
+            secondsEl.textContent = "00";
+            minutesEl.textContent = "00";
+            hoursEl.textContent = "00";
+            daysEl.textContent = "00";
+            datetimeInput.removeAttribute("disabled");
+        } else {
+            setDate();
+        }
+    }, 1000);
+
+    function setDate() {
+        const timeTimerObject = convertMs(timeLeft);
+        const { days, hours, minutes, seconds } = timeTimerObject;
+        secondsEl.textContent = seconds;
+        minutesEl.textContent = minutes;
+        hoursEl.textContent = hours;
+        daysEl.textContent = days;
+    }
 }
 
 function convertMs(ms) {
-	// Number of milliseconds per unit of time
-	const second = 1000;
-	const minute = second * 60;
-	const hour = minute * 60;
-	const day = hour * 24;
+    // Кількість мілісекунд в одиниці часу
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
 
-	// Remaining days
-	const days = String(Math.floor(ms / day)).padStart(2, "0");
-	// Remaining hours
-	const hours = String(Math.floor((ms % day) / hour)).padStart(2, "0");
-	// Remaining minutes
-	const minutes = String(Math.floor(((ms % day) % hour) / minute)).padStart(2, "0");
-	// Remaining seconds
-	const seconds = String(Math.floor((((ms % day) % hour) % minute) / second)).padStart(2, "0");
+    // Дні
+    const days = String(Math.floor(ms / day)).padStart(2, "0");
+    // Години
+    const hours = String(Math.floor((ms % day) / hour)).padStart(2, "0");
+    // Хвилини
+    const minutes = String(Math.floor(((ms % day) % hour) / minute)).padStart(2, "0");
+    // Секунди
+    const seconds = String(Math.floor((((ms % day) % hour) % minute) / second)).padStart(2, "0");
 
-	return { days, hours, minutes, seconds };
+    return { days, hours, minutes, seconds };
 }
