@@ -1,19 +1,20 @@
-import flatpickr from "flatpickr"; 
+import flatpickr from "flatpickr";  
 import iziToast from "izitoast";
 
 let userSelectedDate;
 const datetimeBtn = document.querySelector('.datetime-btn');
+const startBtn = document.querySelector('[data-start]'); // <--- Знайшли кнопку Start
 
 const flatpickrOptions = {
     enableTime: true,
     time_24hr: true,
-    defaultDate: new Date(),
+    defaultDate: new Date(),  
     minuteIncrement: 1,
     onClose(selectedDates) {
         userSelectedDate = selectedDates[0];
-        const currentDate = checkDate(); 
-        if (currentDate) {  
-            startTimer(currentDate); 
+        const currentDate = checkDate(); // отримуємо поточну дату з функції
+        if (currentDate) {  // перевірка, чи дійсно поточна дата правильна
+            startBtn.removeAttribute("disabled"); // <--- Активуємо кнопку Start після вибору дати
         }
     },
 };
@@ -47,14 +48,16 @@ function checkDate() {
     if (userSelectedDate <= currentDate) {
         datetimeBtn.setAttribute("disabled", "disabled");
         iziToast.show(iziToastOptions);
-        return false; 
+        return false; // неправильна дата
     } else {
         datetimeBtn.removeAttribute("disabled");
-        return currentDate; 
+        return currentDate; // повертаємо поточну дату
     }
 }
 
-function startTimer(currentDate) {
+// <--- Видаляємо currentDate із параметра функції, таймер буде запускатися лише після натискання кнопки
+function startTimer() {
+    const currentDate = new Date(); // Поточний час в момент натискання кнопки "Start"
     const timeTimer = userSelectedDate - currentDate;
 
     const secondsEl = document.querySelector("[data-seconds]");
@@ -72,8 +75,7 @@ function startTimer(currentDate) {
     const timer = setInterval(() => {
         timeLeft -= 1000;
 
-        if (timeLeft <= 0) {
-            clearInterval(timer); 
+        if (timeLeft <= 0) {// зупиняємо таймер
             secondsEl.textContent = "00";
             minutesEl.textContent = "00";
             hoursEl.textContent = "00";
@@ -112,3 +114,6 @@ function convertMs(ms) {
 
     return { days, hours, minutes, seconds };
 }
+
+// <--- Додаємо слухач події на кнопку старту
+startBtn.addEventListener("click", () => startTimer());  // Запускає таймер при натисканні кнопки
